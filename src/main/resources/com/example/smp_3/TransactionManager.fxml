@@ -1,12 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-
-<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.smp_3.TransactionManagerController">
   <tabs>
-    <Tab text="Open/Close" />
+    <Tab text="Open/Close">
+         <content>
+            <AnchorPane prefHeight="200.0" prefWidth="581.0">
+               <children>
+                  <TextField layoutX="54.0" layoutY="103.0" promptText="First Name" />
+                  <TextField layoutX="54.0" layoutY="153.0" promptText="Last Name" />
+                  <ComboBox fx:id="accountType" layoutX="54.0" layoutY="260.0" prefWidth="150.0" promptText="Account Type" />
+                  <CheckBox fx:id="isLoyal" layoutX="54.0" layoutY="306.0" mnemonicParsing="false" text="Loyal" />
+                  <DatePicker layoutX="54.0" layoutY="201.0" promptText="DOB" />
+                  <ToggleButton fx:id="openButton" layoutX="116.0" layoutY="27.0" mnemonicParsing="false" onAction="#openCloseToggleButton" prefHeight="44.0" prefWidth="112.0" text="OPEN" textAlignment="CENTER">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="open_close" />
+                     </toggleGroup>
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </ToggleButton>
+                  <ToggleButton fx:id="closeButton" layoutX="357.0" layoutY="27.0" mnemonicParsing="false" onAction="#openCloseToggleButton" prefHeight="44.0" prefWidth="112.0" text="CLOSE" toggleGroup="$open_close">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </ToggleButton>
+               </children>
+            </AnchorPane>
+         </content></Tab>
     <Tab text="Deposit/Withdraw" />
       <Tab text="Account Database" />
   </tabs>
