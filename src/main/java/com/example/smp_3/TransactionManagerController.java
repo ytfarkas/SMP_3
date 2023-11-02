@@ -22,12 +22,22 @@ public class TransactionManagerController {
     private ToggleButton openButton;
 
     @FXML
+    private ToggleGroup open_close;
+
+    @FXML
     private CheckBox isLoyal;
 
     @FXML
-    private ToggleGroup open_close;
+    private RadioButton nbButton;
 
-    @FXML ToggleGroup campusLocation;
+    @FXML
+    private RadioButton newarkButton;
+
+    @FXML
+    private RadioButton caButton;
+
+    @FXML
+    private ToggleGroup campusLocation;
 
     @FXML
     private ComboBox accountType;
@@ -41,18 +51,23 @@ public class TransactionManagerController {
     private DatePicker dateOfBirth;
 
     @FXML
+    private Button clear;
+
+    @FXML
     private GridPane campusContainer;
 
     @FXML
     private void initialize(){
-        BooleanBinding noneSelected = openButton.selectedProperty().not().and(closeButton.selectedProperty().not());
-        firstName.disableProperty().bind(noneSelected);
-        lastName.disableProperty().bind(noneSelected);
-        dateOfBirth.disableProperty().bind(noneSelected);
-        accountType.disableProperty().bind(noneSelected);
-        isLoyal.setVisible(false);
-        campusContainer.setVisible(false);
         accountType.setItems(accountTypeList);
+        accountType.setPromptText("Account Type");
+        firstName.setDisable(true);
+        lastName.setDisable(true);
+        dateOfBirth.setDisable(true);
+        accountType.setDisable(true);
+        isLoyal.setDisable(true);
+        nbButton.setDisable(true);
+        newarkButton.setDisable(true);
+        caButton.setDisable(true);
 
     }
 
@@ -60,28 +75,57 @@ public class TransactionManagerController {
 
     @FXML
     void openCloseToggleButton(ActionEvent event) {
-        if (event.getSource() == openButton){
-
+        if (event.getSource() == openButton || event.getSource() == closeButton){
+            firstName.setDisable(false);
+            lastName.setDisable(false);
+            dateOfBirth.setDisable(false);
+            accountType.setDisable(false);
         }
-        else {
-            isLoyal.setVisible(false);
+        if (event.getSource() == closeButton){
+        }
+        if (!openButton.isSelected() && !closeButton.isSelected()){
+            firstName.setDisable(true);
+            lastName.setDisable(true);
+            dateOfBirth.setDisable(true);
+            accountType.setDisable(true);
         }
     }
     @FXML
-    void checkAccount (ActionEvent event){
-        if (accountType.getSelectionModel().getSelectedItem().equals("Savings")
-                ||accountType.getSelectionModel().getSelectedItem().equals("Money Market")) {
-            isLoyal.setVisible(true);
+    void checkAccount (ActionEvent event) {
+        if (accountType.getSelectionModel().getSelectedItem() != null) {
+            if (accountType.getSelectionModel().getSelectedItem().equals("Savings")
+                    || accountType.getSelectionModel().getSelectedItem().equals("Money Market")) {
+                isLoyal.setDisable(false);
+            } else {
+                isLoyal.setDisable(true);
+            }
+            if (accountType.getSelectionModel().getSelectedItem().equals("College Checking")) {
+                nbButton.setDisable(false);
+                newarkButton.setDisable(false);
+                caButton.setDisable(false);
+            } else {
+                nbButton.setDisable(true);
+                newarkButton.setDisable(true);
+                caButton.setDisable(true);
+            }
+        } else {
+            isLoyal.setDisable(true);
+            nbButton.setDisable(true);
+            newarkButton.setDisable(true);
+            caButton.setDisable(true);
         }
-        else{
-            isLoyal.setVisible(false);
-        }
-        if (accountType.getSelectionModel().getSelectedItem().equals("College Checking")){
-            campusContainer.setVisible(true);
-        }
-        else {
-            campusContainer.setVisible(false);
-        }
+    }
+    @FXML
+    void clearField(ActionEvent event){
+        firstName.clear();
+        lastName.clear();
+        dateOfBirth.setValue(null);
+        accountType.getSelectionModel().clearSelection();
+        accountType.setPromptText("Account Type");
+        isLoyal.setSelected(false);
+        campusLocation.selectToggle(null);
+
+
     }
 
 }
