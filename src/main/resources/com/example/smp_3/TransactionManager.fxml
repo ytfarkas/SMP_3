@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
@@ -38,7 +39,7 @@
                                 <Font size="24.0" />
                             </font>
                         </ToggleButton>
-                        <ComboBox fx:id="accountType" layoutX="54.0" layoutY="260.0" onAction="#checkAccount" prefWidth="150.0" promptText="Account Type" />
+                        <ComboBox fx:id="accountType" layoutX="54.0" layoutY="260.0" onAction="#checkAccount" prefWidth="150.0" />
                         <GridPane fx:id="campusContainer" layoutX="215.0" layoutY="263.0" prefHeight="43.0" prefWidth="234.0">
                             <columnConstraints>
                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="45.0" />
@@ -51,13 +52,13 @@
                                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <RadioButton mnemonicParsing="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                                <RadioButton fx:id="newarkButton" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                                     <toggleGroup>
                                         <ToggleGroup fx:id="campusLocation" />
                                     </toggleGroup>
                                 </RadioButton>
-                                <RadioButton mnemonicParsing="false" toggleGroup="$campusLocation" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                                <RadioButton mnemonicParsing="false" toggleGroup="$campusLocation" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                                <RadioButton fx:id="caButton" mnemonicParsing="false" toggleGroup="$campusLocation" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                                <RadioButton fx:id="nbButton" mnemonicParsing="false" toggleGroup="$campusLocation" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                                 <Label text="New Brunswick" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                                 <Label text="Newark" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                                 <Label text="Camden" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
@@ -65,6 +66,8 @@
                                 <Label text="Loyal" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                             </children>
                         </GridPane>
+                  <Button layoutX="177.0" layoutY="336.0" mnemonicParsing="false" text="Confirm" />
+                  <Button fx:id="clear" layoutX="357.0" layoutY="336.0" mnemonicParsing="false" onAction="#clearField" text="Clear" />
                     </children>
                 </AnchorPane>
             </content></Tab>
