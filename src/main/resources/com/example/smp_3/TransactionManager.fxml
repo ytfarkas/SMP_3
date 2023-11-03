@@ -23,9 +23,9 @@
             <content>
                 <AnchorPane prefHeight="200.0" prefWidth="581.0">
                     <children>
-                        <TextField fx:id="firstName" layoutX="54.0" layoutY="103.0" promptText="First Name" />
-                        <TextField fx:id="lastName" layoutX="54.0" layoutY="153.0" promptText="Last Name" />
-                        <DatePicker fx:id="dateOfBirth" layoutX="54.0" layoutY="201.0" promptText="DOB" />
+                        <TextField fx:id="firstName" layoutX="54.0" layoutY="87.0" promptText="First Name" />
+                        <TextField fx:id="lastName" layoutX="54.0" layoutY="123.0" promptText="Last Name" />
+                        <DatePicker fx:id="dateOfBirth" layoutX="54.0" layoutY="158.0" promptText="DOB" />
                         <ToggleButton fx:id="openButton" layoutX="116.0" layoutY="27.0" mnemonicParsing="false" onAction="#openCloseToggleButton" prefHeight="44.0" prefWidth="112.0" text="OPEN" textAlignment="CENTER">
                             <toggleGroup>
                                 <ToggleGroup fx:id="open_close" />
@@ -39,8 +39,8 @@
                                 <Font size="24.0" />
                             </font>
                         </ToggleButton>
-                        <ComboBox fx:id="accountType" layoutX="54.0" layoutY="260.0" onAction="#checkAccount" prefWidth="150.0" />
-                        <GridPane fx:id="campusContainer" layoutX="215.0" layoutY="263.0" prefHeight="43.0" prefWidth="234.0">
+                        <ComboBox fx:id="accountType" layoutX="54.0" layoutY="194.0" onAction="#checkAccount" prefWidth="150.0" promptText="Account Type" />
+                        <GridPane fx:id="campusContainer" layoutX="212.0" layoutY="198.0" prefHeight="43.0" prefWidth="234.0">
                             <columnConstraints>
                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="45.0" />
                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="172.0" minWidth="10.0" prefWidth="90.0" />
@@ -66,8 +66,9 @@
                                 <Label text="Loyal" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                             </children>
                         </GridPane>
-                  <Button layoutX="177.0" layoutY="336.0" mnemonicParsing="false" text="Confirm" />
-                  <Button fx:id="clear" layoutX="357.0" layoutY="336.0" mnemonicParsing="false" onAction="#clearField" text="Clear" />
+                  <Button fx:id="confirm" layoutX="188.0" layoutY="348.0" mnemonicParsing="false" onAction="#confirmField" text="Confirm" />
+                  <Button fx:id="clear" layoutX="305.0" layoutY="348.0" mnemonicParsing="false" onAction="#clearField" text="Clear" />
+                  <TextField fx:id="amount" layoutX="54.0" layoutY="253.0" promptText="Inital Deposit Amount " />
                     </children>
                 </AnchorPane>
             </content></Tab>
