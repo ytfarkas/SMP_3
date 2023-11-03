@@ -55,10 +55,10 @@ public class Date implements Comparable<Date> { // add comparable method
      * @param date string with the date
      */
     Date(String date) {
-        String[] splitD = date.split("/");
-        this.month = Integer.parseInt(splitD[0]);
-        this.day = Integer.parseInt(splitD[1]);
-        this.year = Integer.parseInt(splitD[2]);
+        String[] splitD = date.split("-");
+        this.month = Integer.parseInt(splitD[1]);
+        this.day = Integer.parseInt(splitD[2]);
+        this.year = Integer.parseInt(splitD[0]);
     }
 
     @Override
