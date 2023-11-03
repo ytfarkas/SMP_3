@@ -40,7 +40,7 @@
                             </font>
                         </ToggleButton>
                         <ComboBox fx:id="accountType" layoutX="54.0" layoutY="194.0" onAction="#checkAccount" prefWidth="150.0" promptText="Account Type" />
-                        <GridPane fx:id="campusContainer" layoutX="212.0" layoutY="198.0" prefHeight="43.0" prefWidth="234.0">
+                        <GridPane fx:id="campusContainer" layoutX="240.0" layoutY="198.0" prefHeight="43.0" prefWidth="234.0">
                             <columnConstraints>
                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="45.0" />
                                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="172.0" minWidth="10.0" prefWidth="90.0" />
@@ -66,13 +66,67 @@
                                 <Label text="Loyal" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                             </children>
                         </GridPane>
-                  <Button fx:id="confirm" layoutX="188.0" layoutY="348.0" mnemonicParsing="false" onAction="#confirmField" text="Confirm" />
-                  <Button fx:id="clear" layoutX="305.0" layoutY="348.0" mnemonicParsing="false" onAction="#clearField" text="Clear" />
-                  <TextField fx:id="amount" layoutX="54.0" layoutY="253.0" promptText="Inital Deposit Amount " />
+                  <Button fx:id="confirm" layoutX="184.0" layoutY="272.0" mnemonicParsing="false" onAction="#confirmField" text="Confirm" />
+                  <Button fx:id="clear" layoutX="310.0" layoutY="272.0" mnemonicParsing="false" onAction="#clearField" text="Clear" />
+                  <TextField fx:id="amount" layoutX="54.0" layoutY="229.0" promptText="Inital Deposit Amount " />
                     </children>
                 </AnchorPane>
             </content></Tab>
-        <Tab text="Deposit/Withdraw" />
-        <Tab text="Account Database" />
+      <Tab text="Deposit/Withdraw">
+         <content>
+            <AnchorPane prefHeight="200.0" prefWidth="581.0">
+               <children>
+                  <TextField fx:id="dwFname" layoutX="54.0" layoutY="87.0" promptText="First Name" />
+                  <TextField fx:id="dwLname" layoutX="54.0" layoutY="123.0" promptText="Last Name" />
+                  <DatePicker fx:id="dwDOB" layoutX="54.0" layoutY="158.0" promptText="DOB" />
+                  <ToggleButton fx:id="depositButton" layoutX="116.0" layoutY="27.0" mnemonicParsing="false" onAction="#depoWithToggle" prefHeight="45.0" prefWidth="129.0" text="DEPOSIT" textAlignment="CENTER">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                     <toggleGroup>
+                        <ToggleGroup fx:id="depo_with" />
+                     </toggleGroup>
+                  </ToggleButton>
+                  <ToggleButton fx:id="withdrawButton" layoutX="313.0" layoutY="27.0" mnemonicParsing="false" onAction="#depoWithToggle" prefHeight="45.0" prefWidth="161.0" text="WITHDRAW" textAlignment="CENTER" toggleGroup="$depo_with">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </ToggleButton>
+                  <ComboBox fx:id="dwAccountType" layoutX="54.0" layoutY="194.0" prefWidth="150.0" promptText="Account Type" />
+                  <Button fx:id="dwConfirm" layoutX="184.0" layoutY="272.0" mnemonicParsing="false" onAction="#dwConfirm" text="Confirm" />
+                  <Button fx:id="dwClear" layoutX="313.0" layoutY="272.0" mnemonicParsing="false" onAction="#dwclearField" text="Clear" />
+                  <TextField fx:id="dwAmount" layoutX="54.0" layoutY="228.0" />
+               </children>
+            </AnchorPane>
+         </content>
+      </Tab>
+        <Tab text="Account Database">
+         <content>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0">
+               <children>
+                  <AnchorPane prefHeight="571.0" prefWidth="600.0">
+                     <children>
+                        <GridPane layoutX="14.0" layoutY="14.0" prefHeight="56.0" prefWidth="573.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#printAccount" prefHeight="49.0" prefWidth="119.0" text="Print Accounts" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                              <Button mnemonicParsing="false" onAction="#printInterestAndFees" prefHeight="49.0" prefWidth="119.0" text="Print Interest &#10;&amp; Fees" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                              <Button mnemonicParsing="false" onAction="#printUpdatedBalances" prefHeight="49.0" prefWidth="119.0" text="Print Updated &#10;Balances" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                              <Button mnemonicParsing="false" prefHeight="49.0" prefWidth="119.0" text="Load Account&#10;From File" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                           </children>
+                        </GridPane>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+         </content></Tab>
     </tabs>
 </TabPane>
