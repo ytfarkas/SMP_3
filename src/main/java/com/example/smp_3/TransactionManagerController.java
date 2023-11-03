@@ -8,6 +8,10 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
+import java.io.File;
 import java.time.LocalDate;
 
 
@@ -16,6 +20,9 @@ public class TransactionManagerController {
     ObservableList<String> accountTypeList = FXCollections.observableArrayList(
             "Checking", "College Checking", "Savings", "Money Market");
     AccountDatabase accountDatabase = new AccountDatabase();
+
+
+
 
     @FXML
     private ToggleButton closeButton;
@@ -106,8 +113,6 @@ public class TransactionManagerController {
         dwDOB.setDisable(true);
         dwAccountType.setDisable(true);
         dwAmount.setDisable(true);
-
-
     }
 
     @FXML
@@ -307,6 +312,11 @@ public class TransactionManagerController {
     }
     @FXML
     void loadFile(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Load Account From File");
+        FileChooser.ExtensionFilter ex1 = new FileChooser.ExtensionFilter("Text Files","*.txt");
+        File file = fileChooser.showOpenDialog(new Stage());
+        fileChooser.setInitialDirectory(new File("~/Destktop"));
 
     }
 }

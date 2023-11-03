@@ -120,7 +120,7 @@
                               <Button mnemonicParsing="false" onAction="#printAccount" prefHeight="49.0" prefWidth="119.0" text="Print Accounts" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                               <Button mnemonicParsing="false" onAction="#printInterestAndFees" prefHeight="49.0" prefWidth="119.0" text="Print Interest &#10;&amp; Fees" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                               <Button mnemonicParsing="false" onAction="#printUpdatedBalances" prefHeight="49.0" prefWidth="119.0" text="Print Updated &#10;Balances" textAlignment="CENTER" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                              <Button mnemonicParsing="false" prefHeight="49.0" prefWidth="119.0" text="Load Account&#10;From File" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                              <Button mnemonicParsing="false" onAction="#loadFile" prefHeight="49.0" prefWidth="119.0" text="Load Account&#10;From File" textAlignment="CENTER" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
                            </children>
                         </GridPane>
                      </children>
