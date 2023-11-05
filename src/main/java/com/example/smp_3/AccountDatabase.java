@@ -217,7 +217,7 @@ public class AccountDatabase {
                // System.out.println(account.holder.toString() + account.printType() + " Withdraw - balance updated.");
                 return true;
             }
-            System.out.println(account.holder.toString() + account.printType() + " Withdraw - insufficient fund.");
+            //System.out.println(account.holder.toString() + account.printType() + " Withdraw - insufficient fund.");
             return false;
         }
         return false;
@@ -261,7 +261,7 @@ public class AccountDatabase {
             if (accounts[find(account)].printType().equals("(MM)")) {
                 updateLoyalty(account);
             }
-            System.out.println(account.holder.toString() + account.printType() + " Deposit - balance updated.");
+           // System.out.println(account.holder.toString() + account.printType() + " Deposit - balance updated.");
         }
     }
 

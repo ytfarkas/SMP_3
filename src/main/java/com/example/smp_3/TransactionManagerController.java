@@ -133,11 +133,13 @@ public class TransactionManagerController {
         dateOfBirth.valueProperty().addListener((observable, oldValue, newValue) -> checkOCTextFieldCompletion());
         accountType.valueProperty().addListener((observable, oldValue, newValue) -> checkOCTextFieldCompletion());
         amount.textProperty().addListener((observable, oldValue, newValue) -> checkOCTextFieldCompletion());
+        campusLocation.selectedToggleProperty().addListener((observable, oldToggle, newToggle) -> checkOCTextFieldCompletion());
         dwFname.textProperty().addListener((observable, oldValue, newValue) -> checkDWTextFieldCompletion());
         dwLname.textProperty().addListener((observable, oldValue, newValue) -> checkDWTextFieldCompletion());
         dwDOB.valueProperty().addListener((observable, oldValue, newValue) -> checkDWTextFieldCompletion());
         dwAccountType.valueProperty().addListener((observable, oldValue, newValue) -> checkDWTextFieldCompletion());
         dwAmount.textProperty().addListener((observable, oldValue, newValue) -> checkDWTextFieldCompletion());
+
     }
 
 
@@ -191,12 +193,6 @@ public class TransactionManagerController {
         }
     }
 
-
-    /*public void setConsoleText(String message){
-        String add = OCconsole.getText() + "\n" + message;
-        OCconsole.setText(add);
-        DWconsole.setText(add);
-    }*/
     @FXML
     void openCloseToggleButton(ActionEvent event) {
         if (event.getSource() == openButton) {
@@ -277,6 +273,12 @@ public class TransactionManagerController {
     }
     @FXML
     void openHandler(Profile profile, String accType){
+        try{
+            Integer.parseInt(amount.getText());
+        } catch (NumberFormatException n){
+            console.setText(console.getText() + "\n" + "Invalid Command!");
+            return;
+        }
         int amountDepo = Integer.parseInt(amount.getText());
         if (accType.equals("Savings")) {
             boolean isLoy = isLoyal.isSelected();
@@ -393,22 +395,25 @@ public class TransactionManagerController {
     void dwConfirm(ActionEvent event) {
         Profile profile = new Profile(dwFname.getText().trim(),dwLname.getText().trim(),  new Date(String.valueOf(dwDOB.getValue())));
         String accType = (String) dwAccountType.getValue();
+        try{
+            Integer.parseInt(dwAmount.getText());
+        } catch(NumberFormatException n){
+            console.setText(console.getText() + "\n" + "Invalid Command!");
+            return;
+        }
         int amountDepoWith = Integer.parseInt(dwAmount.getText());
         Account account = null;
         if (depo_with.getSelectedToggle().equals(depositButton)) {
             if (accType.equals("Savings")) {
                 account = new Savings(profile, amountDepoWith);
-                accountDatabase.deposit(account);
             } else if (accType.equals("Money Market")) {
                  account = new MoneyMarket(profile, amountDepoWith);
-                accountDatabase.deposit(account);
             } else if (accType.equals("Checking")) {
                  account = new Checking(profile, amountDepoWith);
-                accountDatabase.deposit(account);
             } else if (accType.equals("College Checking")) {
                  account = new CollegeChecking(profile, amountDepoWith);
-                accountDatabase.deposit(account);
             }
+            depositHandler(account);
         } else if (depo_with.getSelectedToggle().equals(withdrawButton)) {
             if (accType.equals("Savings")) {
                 account = new Savings(profile, amountDepoWith);
@@ -420,7 +425,6 @@ public class TransactionManagerController {
                 account = new CollegeChecking(profile, amountDepoWith);
                 accountDatabase.withdraw(account);
             }
-
             if(accountDatabase.withdraw(account)){
                 console.setText(console.getText() + "\n" + account.holder.toString() + account.printType() + " Withdraw - balance updated.");
             }
@@ -430,6 +434,25 @@ public class TransactionManagerController {
         }
     }
 
+    @FXML
+    void depositHandler(Account account){
+        if (account.balance <= 0) {
+            console.setText(console.getText() + "\n" +"Deposit - amount cannot be 0 or negative.");
+        } else if (account.holder.getDOB().isValid() && accountDatabase.isInDatabase(account) == null){
+            console.setText(console.getText() + "\n" + account.holder.toString() + account.printType() + " Deposit - balance updated.");
+            accountDatabase.deposit(account);
+        } else{
+            if(account.holder.getDOB().checkLeap() != null){
+                console.setText(console.getText() + "\n" + account.holder.getDOB().checkLeap());
+            }
+            else if(account.holder.getDOB().checkDate(account.holder.getDOB().getMonth(), account.holder.getDOB().getDay(), account.holder.getDOB().getYear()) != null){
+                console.setText(console.getText() + "\n" + account.holder.getDOB().checkDate(account.holder.getDOB().getMonth(), account.holder.getDOB().getDay(), account.holder.getDOB().getYear()));
+            }
+            else{
+                console.setText(console.getText() + "\n" + accountDatabase.isInDatabase(account));
+            }
+        }
+    }
     @FXML
     void printWithdrawErrors(Account account){
         if(account.balance <= 0) {
@@ -482,12 +505,16 @@ public class TransactionManagerController {
                         Profile profile = new Profile(split[1], split[2], DOB);
                         double amount = Double.parseDouble(split[4]);
                         if (account.equals("C")) {
+                            console.setText(console.getText() + "\n" + accountDatabase.validOpen(new Checking(profile, amount)));
                             accountDatabase.open(new Checking(profile, amount));
                         } else if (account.equals("CC")) {
+                            console.setText(console.getText() + "\n" + accountDatabase.validOpen(new CollegeChecking(profile, amount, Integer.parseInt(split[5]))));
                             accountDatabase.open(new CollegeChecking(profile, amount, Integer.parseInt(split[5])));
                         } else if (account.equals("S")) {
+                            console.setText(console.getText() + "\n" + accountDatabase.validOpen(new Savings(profile, amount, Boolean.parseBoolean(split[5]))));
                             accountDatabase.open(new Savings(profile, amount, Boolean.parseBoolean(split[5])));
                         } else if (account.equals("MM")) {
+                            console.setText(console.getText() + "\n" + accountDatabase.validOpen(new MoneyMarket(profile, amount)));
                             accountDatabase.open(new MoneyMarket(profile, amount));
                         }
                     }
