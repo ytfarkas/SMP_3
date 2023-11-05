@@ -16,8 +16,12 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.Pane;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDate;
+import java.util.StringTokenizer;
 
 
 public class TransactionManagerController {
@@ -96,7 +100,6 @@ public class TransactionManagerController {
     private Button dwClear;
     @FXML
     private TextArea console;
-
 
 
     @FXML
@@ -464,13 +467,35 @@ public class TransactionManagerController {
     void loadFile(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Load Account From File");
-        FileChooser.ExtensionFilter ex1 = new FileChooser.ExtensionFilter("Text Files","*.txt");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Text Files","*.txt"));
         File file = fileChooser.showOpenDialog(new Stage());
-        fileChooser.setInitialDirectory(new File("~/Destktop"));
-
+        if (file != null){
+            try (BufferedReader lineReader = new BufferedReader(new FileReader(file))) {
+                StringBuilder stringLine = new StringBuilder();
+                String readLine;
+                while ((readLine = lineReader.readLine()) != null) {
+                    if (!readLine.isEmpty()) {
+                        String[] split = readLine.split(",");
+                        String account = split[0];
+                        String[] splitD = split[3].split("/");
+                        Date DOB = new Date(Integer.parseInt(splitD[0]), Integer.parseInt(splitD[1]), Integer.parseInt(splitD[2]));
+                        Profile profile = new Profile(split[1], split[2], DOB);
+                        double amount = Double.parseDouble(split[4]);
+                        if (account.equals("C")) {
+                            accountDatabase.open(new Checking(profile, amount));
+                        } else if (account.equals("CC")) {
+                            accountDatabase.open(new CollegeChecking(profile, amount, Integer.parseInt(split[5])));
+                        } else if (account.equals("S")) {
+                            accountDatabase.open(new Savings(profile, amount, Boolean.parseBoolean(split[5])));
+                        } else if (account.equals("MM")) {
+                            accountDatabase.open(new MoneyMarket(profile, amount));
+                        }
+                    }
+                }
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            }
+            }
+        }
     }
-}
-
-
-
-
