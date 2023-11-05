@@ -159,7 +159,7 @@ public class AccountDatabase {
      * @return true if the account was successfully closed, false if not
      */
     public boolean close(Account account) {
-        if (account.holder.getDOB().isValid() && isInDatabase(account)) {
+        if (account.holder.getDOB().isValid() && isInDatabase(account) == null) {
             Account[] newAccounts = new Account[accounts.length];
             int count = 0;
             for (int i = 0; i < numAcct; i++) {
@@ -171,7 +171,7 @@ public class AccountDatabase {
             }
             accounts = newAccounts;
             numAcct--;
-            System.out.println(account.holder.toString() + account.printType() + " has been closed.");
+            //System.out.println(account.holder.toString() + account.printType() + " has been closed.");
             return true;
         }
         return false;
@@ -183,12 +183,11 @@ public class AccountDatabase {
      * @param account the account to search
      * @return true if in the database, false if not
      */
-    public boolean isInDatabase(Account account) {
+    public String isInDatabase(Account account) {
         if (!contains(account)) {
-            System.out.println(account.holder.toString() + account.printType() + " is not in the database.");
-            return false;
+            return account.holder.toString() + account.printType() + " is not in the database.";
         }
-        return true;
+        return null;
     }
 
     /**
@@ -201,7 +200,7 @@ public class AccountDatabase {
         //need check for if amount entered is not a number in transactionmanager i think
 
         if (account.balance <= 0) {
-            System.out.println("Withdraw - amount cannot be 0 or negative.");
+            //System.out.println("Withdraw - amount cannot be 0 or negative.");
             return false;
         }
 
@@ -209,13 +208,13 @@ public class AccountDatabase {
             return false;
         }
 
-        if (isInDatabase(account)) {
+        if (isInDatabase(account) == null) {
             if (accounts[find(account)].balance > account.balance) {
                 accounts[find(account)].balance -= account.balance;
                 if (accounts[find(account)].printType().equals("(MM)")) {
                     updateWithdrawalsAndLoyalty(account);
                 }
-                System.out.println(account.holder.toString() + account.printType() + " Withdraw - balance updated.");
+               // System.out.println(account.holder.toString() + account.printType() + " Withdraw - balance updated.");
                 return true;
             }
             System.out.println(account.holder.toString() + account.printType() + " Withdraw - insufficient fund.");
@@ -257,7 +256,7 @@ public class AccountDatabase {
         //need check for if amount entered is not a number in transactionmanager i think
         if (account.balance <= 0) {
             System.out.println("Deposit - amount cannot be 0 or negative.");
-        } else if (account.holder.getDOB().isValid() && isInDatabase(account)) {
+        } else if (account.holder.getDOB().isValid() && isInDatabase(account) == null) {
             accounts[find(account)].balance += account.balance;
             if (accounts[find(account)].printType().equals("(MM)")) {
                 updateLoyalty(account);

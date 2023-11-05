@@ -301,14 +301,52 @@ public class TransactionManagerController {
 
     @FXML
     void closeHandler(Profile profile, String accType){
+        Account account;
         if (accType.equals("Savings")) {
-            accountDatabase.close(new Savings(profile));
+            account = new Savings(profile);
+            if(accountDatabase.close(account)){
+                console.setText(console.getText() + "\n" + profile.toString() + account.printType() + " has been closed.");
+            }
+            else{
+                printCloseErrors(account);
+            }
         } else if (accType.equals("Money Market")) {
-            accountDatabase.close(new MoneyMarket(profile));
+            account = new MoneyMarket(profile);
+            if(accountDatabase.close(account)){
+                console.setText(console.getText() + "\n" + profile.toString() + account.printType() + " has been closed.");
+            }
+            else{
+                printCloseErrors(account);
+            }
         } else if (accType.equals("Checking")) {
-            accountDatabase.close(new Checking(profile));
+            account = new Checking(profile);
+            if(accountDatabase.close(account)){
+                console.setText(console.getText() + "\n" + profile.toString() + account.printType() + " has been closed.");
+            }
+            else{
+                printCloseErrors(account);
+            }
         } else if (accType.equals("College Checking")) {
-            accountDatabase.close(new CollegeChecking(profile));
+            account = new CollegeChecking(profile);
+            if(accountDatabase.close(account)){
+                console.setText(console.getText() + "\n" + profile.toString() + account.printType() + " has been closed.");
+            }
+            else{
+                printCloseErrors(account);
+            }
+        }
+    }
+
+    @FXML
+    void printCloseErrors(Account account){
+        if(account.holder.getDOB().checkLeap() != null){
+            console.setText(console.getText() + "\n" + account.holder.getDOB().checkLeap());
+        }
+        else if(account.holder.getDOB().checkDate(account.holder.getDOB().getMonth(), account.holder.getDOB().getDay(), account.holder.getDOB().getYear()) != null){
+            console.setText(console.getText() + "\n" + account.holder.getDOB().checkDate(account.holder.getDOB().getMonth(), account.holder.getDOB().getDay(), account.holder.getDOB().getYear()));
+        }
+        else{
+            console.setText(console.getText() + "\n" + accountDatabase.isInDatabase(account));
         }
     }
 
@@ -350,40 +388,62 @@ public class TransactionManagerController {
 
     @FXML
     void dwConfirm(ActionEvent event) {
-        String fName = dwFname.getText().trim();
-        String lName = dwLname.getText().trim();
-        String dateOB = String.valueOf(dwDOB.getValue());
-        Date date = new Date(dateOB);
-        Profile profile = new Profile(fName, lName, date);
+        Profile profile = new Profile(dwFname.getText().trim(),dwLname.getText().trim(),  new Date(String.valueOf(dwDOB.getValue())));
         String accType = (String) dwAccountType.getValue();
         int amountDepoWith = Integer.parseInt(dwAmount.getText());
+        Account account = null;
         if (depo_with.getSelectedToggle().equals(depositButton)) {
             if (accType.equals("Savings")) {
-                Account account = new Savings(profile, amountDepoWith);
+                account = new Savings(profile, amountDepoWith);
                 accountDatabase.deposit(account);
             } else if (accType.equals("Money Market")) {
-                Account account = new MoneyMarket(profile, amountDepoWith);
+                 account = new MoneyMarket(profile, amountDepoWith);
                 accountDatabase.deposit(account);
             } else if (accType.equals("Checking")) {
-                Account account = new Checking(profile, amountDepoWith);
+                 account = new Checking(profile, amountDepoWith);
                 accountDatabase.deposit(account);
             } else if (accType.equals("College Checking")) {
-                Account account = new CollegeChecking(profile, amountDepoWith);
+                 account = new CollegeChecking(profile, amountDepoWith);
                 accountDatabase.deposit(account);
             }
         } else if (depo_with.getSelectedToggle().equals(withdrawButton)) {
             if (accType.equals("Savings")) {
-                accountDatabase.withdraw(new Savings(profile, amountDepoWith));
+                account = new Savings(profile, amountDepoWith);
             } else if (accType.equals("Money Market")) {
-                accountDatabase.withdraw(new MoneyMarket(profile, amountDepoWith));
+                account = new MoneyMarket(profile, amountDepoWith);
             } else if (accType.equals("Checking")) {
-                accountDatabase.withdraw(new Checking(profile, amountDepoWith));
+                account = new Checking(profile, amountDepoWith);
             } else if (accType.equals("College Checking")) {
-                accountDatabase.withdraw(new CollegeChecking(profile, amountDepoWith));
+                account = new CollegeChecking(profile, amountDepoWith);
+                accountDatabase.withdraw(account);
+            }
+
+            if(accountDatabase.withdraw(account)){
+                console.setText(console.getText() + "\n" + account.holder.toString() + account.printType() + " Withdraw - balance updated.");
+            }
+            else{
+                printWithdrawErrors(account);
             }
         }
+    }
 
-
+    @FXML
+    void printWithdrawErrors(Account account){
+        if(account.balance <= 0) {
+            console.setText(console.getText() + "\n" + "Withdraw - amount cannot be 0 or negative.");
+        }
+        else if(account.holder.getDOB().checkLeap() != null){
+            console.setText(console.getText() + "\n" + account.holder.getDOB().checkLeap());
+        }
+        else if(account.holder.getDOB().checkDate(account.holder.getDOB().getMonth(), account.holder.getDOB().getDay(), account.holder.getDOB().getYear()) != null){
+            console.setText(console.getText() + "\n" + account.holder.getDOB().checkDate(account.holder.getDOB().getMonth(), account.holder.getDOB().getDay(), account.holder.getDOB().getYear()));
+        }
+        else if(accountDatabase.isInDatabase(account) != null){
+            console.setText(console.getText() + "\n" + accountDatabase.isInDatabase(account));
+        }
+        else{
+            console.setText(console.getText() + "\n" + account.holder.toString() + account.printType() + " Withdraw - insufficient fund.");
+        }
     }
 
     @FXML
