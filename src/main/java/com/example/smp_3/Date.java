@@ -1,6 +1,12 @@
 package com.example.smp_3;
 
 import java.util.Calendar;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
 
 /**
  * The Date class is the primary class that stores the inputted date
@@ -66,13 +72,23 @@ public class Date implements Comparable<Date> { // add comparable method
         return month + "/" + day + "/" + year;
     }
 
+    public int getYear(){
+        return year;
+    }
+    public int getMonth(){
+        return month;
+    }
+    public int getDay(){
+        return day;
+    }
+
     /**
      * Checks if date is a valid calendar date
      *
      * @return true, if date is invalid return false
      */
     public boolean isValid() {
-        if (!checkLeap() || !checkDate(this.month, this.day, this.year)) {
+        if (checkLeap() != null || checkDate(this.month, this.day, this.year) != null) {
             return false;
         }
         return true;
@@ -101,7 +117,7 @@ public class Date implements Comparable<Date> { // add comparable method
      *
      * @return true if date is valid, false if invalid date or leap year
      */
-    public boolean checkLeap() {
+    public String checkLeap() {
         switch (this.month) {
             case 1:
             case 3:
@@ -113,8 +129,7 @@ public class Date implements Comparable<Date> { // add comparable method
                 if (this.day >= 1 && this.day <= 31) {
                     break;
                 }
-                System.out.println("DOB invalid: " + this.month + "/" + this.day + "/" + this.year + " not a valid calendar date!");
-                return false;
+                return "DOB invalid: " + this.month + "/" + this.day + "/" + this.year + " not a valid calendar date!";
             case 4:
             case 6:
             case 9:
@@ -122,8 +137,7 @@ public class Date implements Comparable<Date> { // add comparable method
                 if (this.day >= 1 && this.day <= 30) {
                     break;
                 }
-                System.out.println("DOB invalid: " + this.month + "/" + this.day + "/" + this.year + " not a valid calendar date!");
-                return false;
+                return "DOB invalid: " + this.month + "/" + this.day + "/" + this.year + " not a valid calendar date!";
             case 2:
                 if (this.year % QUADRENNIAL == 0) {
                     if (this.year % CENTENNIAL == 0) {
@@ -136,11 +150,10 @@ public class Date implements Comparable<Date> { // add comparable method
                     }
                 } else if (this.day <= 28 && this.day >= 1) {
                 } else {
-                    System.out.println("DOB invalid: " + this.month + "/" + this.day + "/" + this.year + " not a valid calendar date!");
-                    return false;
+                    return "DOB invalid: " + this.month + "/" + this.day + "/" + this.year + " not a valid calendar date!";
                 }
         }
-        return true;
+        return null;
     }
 
     /**
@@ -151,23 +164,21 @@ public class Date implements Comparable<Date> { // add comparable method
      * @param year  year
      * @return true if valid, false if not
      */
-    public boolean checkDate(int month, int day, int year) {
+    public String checkDate(int month, int day, int year) {
         if ((this.month > 12) || (this.day > 31) || this.month < 1 || this.day < 1) {
-            System.out.println("DOB invalid: " + this.month + "/" + this.day + "/" + this.year + " not a valid calendar date!");
-            return false;
+            return "DOB invalid: " + this.month + "/" + this.day + "/" + this.year + " not a valid calendar date!";
         }
         Calendar calendar = Calendar.getInstance();
-        int calMonth = calendar.get(Calendar.MONTH);
-        int calDay = calendar.get(Calendar.DAY_OF_MONTH) + 1;
+        int calMonth = calendar.get(Calendar.MONTH) + 1;
+        int calDay = calendar.get(Calendar.DAY_OF_MONTH) ;
         int calYear = calendar.get(Calendar.YEAR);
 
         if ((this.year == calYear && this.month == calMonth && this.day == calDay) ||
                 ((this.year > calYear) || (this.year == calYear && this.month > calMonth) ||
                         (this.year == calYear && this.month == calMonth && this.day > calDay))) {
-            System.out.println("DOB invalid: " + this.month + "/" + this.day + "/" + this.year + " cannot be today or a future day.");
-            return false;
+            return "DOB invalid: " + this.month + "/" + this.day + "/" + this.year + " cannot be today or a future day.";
         }
-        return true;
+        return null;
     }
 
 
