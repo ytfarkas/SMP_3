@@ -1,5 +1,13 @@
 package com.example.smp_3;
 
+import javafx.application.Application;
+import javafx.fxml.FXML;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import javafx.scene.control.TextArea;
+import javafx.event.ActionEvent;
+import javafx.scene.control.*;
+
 
 /**
  * The AccountDatabase class contains all the necessary methods for executing the commands that are read from TransactionManager.
@@ -85,13 +93,12 @@ public class AccountDatabase {
      * @return true if the account is opened successfully, false if not
      */
     public boolean open(Account account) {
-        if (validOpen(account)) {
+        if (validOpen(account).equals(account.holder.toString() + account.printType() + " opened.")) {
             if (numAcct == accounts.length) {
                 grow();
             }
             accounts[numAcct] = account;
             numAcct++;
-            System.out.println(account.holder.toString() + account.printType() + " opened.");
             return true;
         }
         return false;
@@ -103,45 +110,47 @@ public class AccountDatabase {
      * @param account the account to be checked
      * @return true if valid, false if not
      */
-    public boolean validOpen(Account account) {
+    public String validOpen(Account account) {
         if (account.balance <= 0) {
-            System.out.println("Initial deposit cannot be 0 or negative.");
-            return false;
+            return "Initial deposit cannot be 0 or negative.";
         }
         if (contains(account)) {
-            System.out.println(account.holder.toString() + account.printType() + " is already in the database.");
-            return false;
+
+            return account.holder.toString() + account.printType() + " is already in the database.";
         }
         if (account.printType().equals("(CC)")) {
             CollegeChecking checking = (CollegeChecking) account;
             try {
                 boolean checkCampCode = !checking.getCampus().isValid();
             } catch (NullPointerException e) {
-                System.out.println("Invalid campus code.");
-                return false;
+                return "Invalid campus code.";
             }
         }
         if ((account.printType().equals("(CC)") || account.printType().equals("(C)")) && hasChecking(account)) {
-            System.out.println(account.holder.toString() + account.printType() + " is already in the database.");
-            return false;
+            return account.holder.toString() + account.printType() + " is already in the database.";
         }
         if (!account.holder.getDOB().isValid()) {
-            return false;
+            if(account.holder.getDOB().checkLeap() != null){
+                return(account.holder.getDOB().checkLeap());
+            }
+            if(account.holder.getDOB().checkDate(account.holder.getDOB().getMonth(), account.holder.getDOB().getDay(), account.holder.getDOB().getYear()) != null){
+                return account.holder.getDOB().checkDate(account.holder.getDOB().getMonth(), account.holder.getDOB().getDay(), account.holder.getDOB().getYear());
+            }
         }
         if (account.holder.getDOB().getAge() < 16) {
-            System.out.println("DOB invalid: " + account.holder.getDOB().toString() + " under 16.");
-            return false;
+            return "DOB invalid: " + account.holder.getDOB().toString() + " under 16.";
         }
         if ((account.printType().equals("(CC)") && account.holder.getDOB().getAge() >= 24)) {
-            System.out.println("DOB invalid: " + account.holder.getDOB().toString() + " over 24.");
-            return false;
+            return "DOB invalid: " + account.holder.getDOB().toString() + " over 24.";
         }
         if (account.printType().equals("(MM)") && account.balance < 2000) {
-            System.out.println("Minimum of $2000 to open a Money Market account.");
-            return false;
+            return "Minimum of $2000 to open a Money Market account.";
         }
-        return true;
+        return account.holder.toString() + account.printType() + " opened.";
     }
+
+
+
 
     /**
      * Removes the account from the database if inputted account is in the database.
@@ -260,39 +269,41 @@ public class AccountDatabase {
     /**
      * Sorts and prints the accounts array by account type, name, and date of birth.
      */
-    public void printSorted() {
+    public String printSorted() {
+        String printAccounts = "";
         if (numAcct == 0) {
-            System.out.println("Account Database is empty!");
+            return "Account Database is empty!";
         } else {
-            System.out.println("*Accounts sorted by account type and profile.");
+            printAccounts = printAccounts + "*Accounts sorted by account type and profile.\n";
             Account[] sortedChecking = sortChecking();
             Account[] sortedCollege = sortCollege();
             Account[] sortedMoneyMarket = sortMoneyMarket();
             Account[] sortedSavings = sortSavings();
             int count = 0;
             for (int i = 0; i < sortedChecking.length; i++) {
-                System.out.println(sortedChecking[i].toString());
+                printAccounts = printAccounts + sortedChecking[i].toString() + "\n";
                 accounts[count] = sortedChecking[i];
                 count++;
             }
             for (int i = 0; i < sortedCollege.length; i++) {
-                System.out.println(sortedCollege[i].toString());
+                printAccounts = printAccounts + sortedCollege[i].toString() + "\n";
                 accounts[count] = sortedCollege[i];
                 count++;
             }
             for (int i = 0; i < sortedMoneyMarket.length; i++) {
-                System.out.println(sortedMoneyMarket[i].toString());
+                printAccounts = printAccounts + sortedMoneyMarket[i].toString() + "\n";
                 accounts[count] = sortedMoneyMarket[i];
                 count++;
             }
             for (int i = 0; i < sortedSavings.length; i++) {
-                System.out.println(sortedSavings[i].toString());
+                printAccounts = printAccounts + sortedSavings[i].toString() + "\n";
                 accounts[count] = sortedSavings[i];
                 count++;
             }
 
-            System.out.println("*end of list.");
+            printAccounts = printAccounts + "*end of list.";
         }
+        return printAccounts;
     } //sort by account type and profile
 
     /**
@@ -447,33 +458,37 @@ public class AccountDatabase {
     /**
      * Prints all the accounts in the database with their fees and interest charges.
      */
-    public void printFeesAndInterests() {
+    public String printFeesAndInterests() {
         resortAccounts();
+        String printAccounts="";
         if (numAcct == 0) {
-            System.out.println("Account Database is empty!");
+            return "Account Database is empty!";
         } else {
-            System.out.println("*list of accounts with fee and monthly interest");
+            printAccounts = printAccounts + "*list of accounts with fee and monthly interest\n";
             for (int i = 0; i < numAcct; i++) {
-                System.out.println(accounts[i].printWithFeesAndInterest());
+                printAccounts = printAccounts + accounts[i].printWithFeesAndInterest() + "\n";
             }
-            System.out.println("*end of list.");
+            printAccounts = printAccounts + "*end of list.";
         }
+        return printAccounts;
     } //calculate interests/fees
 
 
     /**
      * prints all the accounts with their balances updated based on their interest and fees.
      */
-    public void printUpdatedBalances() {
+    public String printUpdatedBalances() {
         resortAccounts();
+        String printAccounts="";
         if (numAcct == 0) {
-            System.out.println("Account Database is empty!");
+            return "Account Database is empty!";
         } else {
-            System.out.println("*list of accounts with fees and interests applied.");
+            printAccounts = printAccounts + "*list of accounts with fees and interests applied." +"\n";
             for (int i = 0; i < numAcct; i++) {
-                System.out.println(accounts[i].printUpdatedBalance());
+                printAccounts = printAccounts + accounts[i].printUpdatedBalance() +"\n";
             }
-            System.out.println("*end of list.");
+            printAccounts = printAccounts + "*end of list.";
         }
+        return printAccounts;
     } //apply the interests/fees
 }

@@ -10,7 +10,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.layout.Pane;
 import java.io.File;
 import java.time.LocalDate;
 
@@ -20,9 +25,6 @@ public class TransactionManagerController {
     ObservableList<String> accountTypeList = FXCollections.observableArrayList(
             "Checking", "College Checking", "Savings", "Money Market");
     AccountDatabase accountDatabase = new AccountDatabase();
-
-
-
 
     @FXML
     private ToggleButton closeButton;
@@ -92,6 +94,10 @@ public class TransactionManagerController {
     private Button dwConfirm;
     @FXML
     private Button dwClear;
+    @FXML
+    private TextArea console;
+
+
 
     @FXML
     private void initialize() {
@@ -113,8 +119,81 @@ public class TransactionManagerController {
         dwDOB.setDisable(true);
         dwAccountType.setDisable(true);
         dwAmount.setDisable(true);
+        addTextFieldListeners();
+        console.setText("Transaction Manager running...");
     }
 
+    @FXML
+    void addTextFieldListeners(){
+        firstName.textProperty().addListener((observable, oldValue, newValue) -> checkOCTextFieldCompletion());
+        lastName.textProperty().addListener((observable, oldValue, newValue) -> checkOCTextFieldCompletion());
+        dateOfBirth.valueProperty().addListener((observable, oldValue, newValue) -> checkOCTextFieldCompletion());
+        accountType.valueProperty().addListener((observable, oldValue, newValue) -> checkOCTextFieldCompletion());
+        amount.textProperty().addListener((observable, oldValue, newValue) -> checkOCTextFieldCompletion());
+        dwFname.textProperty().addListener((observable, oldValue, newValue) -> checkDWTextFieldCompletion());
+        dwLname.textProperty().addListener((observable, oldValue, newValue) -> checkDWTextFieldCompletion());
+        dwDOB.valueProperty().addListener((observable, oldValue, newValue) -> checkDWTextFieldCompletion());
+        dwAccountType.valueProperty().addListener((observable, oldValue, newValue) -> checkDWTextFieldCompletion());
+        dwAmount.textProperty().addListener((observable, oldValue, newValue) -> checkDWTextFieldCompletion());
+    }
+
+
+    @FXML
+    void checkOCTextFieldCompletion() {
+        boolean isComplete = false;
+        if (openButton.isSelected()) {
+            if (!firstName.getText().isEmpty() && !lastName.getText().isEmpty() && dateOfBirth.getValue() != null &&
+                    accountType.getValue() != null && !amount.getText().isEmpty()) {
+                if (accountType.getValue().equals("College Checking")) {
+                    boolean campusSelected = false;
+                    for (Toggle radioButton : campusLocation.getToggles()) {
+                        if (radioButton.isSelected()) {
+                            isComplete = true;
+                            break;
+                        }
+                    }
+                }
+                else {
+                    isComplete = true;
+                }
+            }
+        }
+        if (closeButton.isSelected()) {
+            if (!firstName.getText().isEmpty() && !lastName.getText().isEmpty() && dateOfBirth.getValue() != null &&
+                    accountType.getValue() != null) {
+                isComplete = true;
+            }
+        }
+        if (isComplete) {
+            confirm.setDisable(false);
+        }
+        else{
+            confirm.setDisable(true);
+        }
+    }
+
+    @FXML
+    void checkDWTextFieldCompletion(){
+        boolean isComplete = false;
+        if (!dwFname.getText().isEmpty() && !dwLname.getText().isEmpty() && dwDOB.getValue() != null
+                && dwAccountType != null && !dwAmount.getText().isEmpty()) {
+                isComplete = true;
+        }
+
+        if (isComplete) {
+            dwConfirm.setDisable(false);
+        }
+        else{
+            dwConfirm.setDisable(true);
+        }
+    }
+
+
+    /*public void setConsoleText(String message){
+        String add = OCconsole.getText() + "\n" + message;
+        OCconsole.setText(add);
+        DWconsole.setText(add);
+    }*/
     @FXML
     void openCloseToggleButton(ActionEvent event) {
         if (event.getSource() == openButton) {
@@ -143,7 +222,6 @@ public class TransactionManagerController {
             amount.setDisable(true);
         }
     }
-
     @FXML
     void checkAccount(ActionEvent event) {
         if (accountType.getSelectionModel().getSelectedItem() != null) {
@@ -185,42 +263,52 @@ public class TransactionManagerController {
     //fix Exceptions
     @FXML
     void confirmField(ActionEvent event) {
-        String fName = firstName.getText().trim();
-        String lName = lastName.getText().trim();
-        String dateOB = String.valueOf(dateOfBirth.getValue());
-        Date date = new Date(dateOB);
-        Profile profile = new Profile(fName, lName, date);
-        String accType = (String) accountType.getValue();
-        if (open_close.getSelectedToggle().equals(openButton)) {
-            int amountDepo = Integer.parseInt(amount.getText());
-            if (accType.equals("Savings")) {
-                boolean isLoy = isLoyal.isSelected();
-                accountDatabase.open(new Savings(profile, amountDepo, isLoy));
-            } else if (accType.equals("Money Market")) {
-                accountDatabase.open(new MoneyMarket(profile, amountDepo));
-            } else if (accType.equals("Checking")) {
-                accountDatabase.open(new Checking(profile, amountDepo));
-            } else if (accType.equals("College Checking")) {
-                int CC = 0;
-                if (nbButton.isSelected()) {
-                    CC = 0;
-                } else if (newarkButton.isSelected()) {
-                    CC = 1;
-                } else if (caButton.isSelected()) {
-                    CC = 2;
-                }
-                accountDatabase.open(new CollegeChecking(profile, amountDepo, CC));
+            Profile profile = new Profile(firstName.getText().trim(), lastName.getText().trim(), new Date(String.valueOf(dateOfBirth.getValue())));
+            String accType = (String) accountType.getValue();
+            if (open_close.getSelectedToggle().equals(openButton)) {
+                openHandler(profile, accType);
+                //blank data fields, null pointers
+            } else if (open_close.getSelectedToggle().equals(closeButton)) {
+                closeHandler(profile, accType);
             }
-        } else if (open_close.getSelectedToggle().equals(closeButton)) {
-            if (accType.equals("Savings")) {
-                accountDatabase.close(new Savings(profile));
-            } else if (accType.equals("Money Market")) {
-                accountDatabase.close(new MoneyMarket(profile));
-            } else if (accType.equals("Checking")) {
-                accountDatabase.close(new Checking(profile));
-            } else if (accType.equals("College Checking")) {
-                accountDatabase.close(new CollegeChecking(profile));
+    }
+    @FXML
+    void openHandler(Profile profile, String accType){
+        int amountDepo = Integer.parseInt(amount.getText());
+        if (accType.equals("Savings")) {
+            boolean isLoy = isLoyal.isSelected();
+            console.setText(console.getText() + "\n" + accountDatabase.validOpen(new Savings(profile, amountDepo, isLoy)));
+            accountDatabase.open(new Savings(profile, amountDepo, isLoy));
+        } else if (accType.equals("Money Market")) {
+            console.setText(console.getText() + "\n" + accountDatabase.validOpen(new MoneyMarket(profile, amountDepo)));
+            accountDatabase.open(new MoneyMarket(profile, amountDepo));
+        } else if (accType.equals("Checking")) {
+            console.setText(console.getText() + "\n" +accountDatabase.validOpen(new Checking(profile, amountDepo)));
+            accountDatabase.open(new Checking(profile, amountDepo));
+        } else if (accType.equals("College Checking")) {
+            int CC = 0;
+            if (nbButton.isSelected()) {
+                CC = 0;
+            } else if (newarkButton.isSelected()) {
+                CC = 1;
+            } else if (caButton.isSelected()) {
+                CC = 2;
             }
+            console.setText(console.getText() + "\n" + accountDatabase.validOpen(new CollegeChecking(profile, amountDepo, CC)));
+            accountDatabase.open(new CollegeChecking(profile, amountDepo, CC));
+        }
+    }
+
+    @FXML
+    void closeHandler(Profile profile, String accType){
+        if (accType.equals("Savings")) {
+            accountDatabase.close(new Savings(profile));
+        } else if (accType.equals("Money Market")) {
+            accountDatabase.close(new MoneyMarket(profile));
+        } else if (accType.equals("Checking")) {
+            accountDatabase.close(new Checking(profile));
+        } else if (accType.equals("College Checking")) {
+            accountDatabase.close(new CollegeChecking(profile));
         }
     }
 
@@ -300,15 +388,17 @@ public class TransactionManagerController {
 
     @FXML
     void printAccount(ActionEvent event) {
-        accountDatabase.printSorted();
+        console.setText(console.getText() + "\n" + accountDatabase.printSorted());
+
     }
     @FXML
     void printInterestAndFees(ActionEvent event) {
-        accountDatabase.printFeesAndInterests();
+        console.setText(console.getText() + "\n" + accountDatabase.printFeesAndInterests());
+
     }
     @FXML
     void printUpdatedBalances(ActionEvent event) {
-        accountDatabase.printUpdatedBalances();
+        console.setText(console.getText() + "\n" +accountDatabase.printUpdatedBalances());
     }
     @FXML
     void loadFile(ActionEvent event) {
