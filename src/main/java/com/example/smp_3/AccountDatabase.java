@@ -255,7 +255,7 @@ public class AccountDatabase {
     public void deposit(Account account) {
         //need check for if amount entered is not a number in transactionmanager i think
         if (account.balance <= 0) {
-            System.out.println("Deposit - amount cannot be 0 or negative.");
+        //    System.out.println("Deposit - amount cannot be 0 or negative.");
         } else if (account.holder.getDOB().isValid() && isInDatabase(account) == null) {
             accounts[find(account)].balance += account.balance;
             if (accounts[find(account)].printType().equals("(MM)")) {

@@ -147,7 +147,7 @@ public class TransactionManagerController {
     void checkOCTextFieldCompletion() {
         boolean isComplete = false;
         if (openButton.isSelected()) {
-            if (!firstName.getText().isEmpty() && !lastName.getText().isEmpty() && dateOfBirth.getValue() != null &&
+            if (!firstName.getText().trim().isEmpty() && !lastName.getText().trim().isEmpty() && dateOfBirth.getValue() != null &&
                     accountType.getValue() != null && !amount.getText().isEmpty()) {
                 if (accountType.getValue().equals("College Checking")) {
                     boolean campusSelected = false;
@@ -224,8 +224,7 @@ public class TransactionManagerController {
     @FXML
     void checkAccount(ActionEvent event) {
         if (accountType.getSelectionModel().getSelectedItem() != null) {
-            if (accountType.getSelectionModel().getSelectedItem().equals("Savings")
-                    || accountType.getSelectionModel().getSelectedItem().equals("Money Market")) {
+            if (accountType.getSelectionModel().getSelectedItem().equals("Savings")) {
                 isLoyal.setDisable(false);
             } else {
                 isLoyal.setDisable(true);
@@ -274,12 +273,12 @@ public class TransactionManagerController {
     @FXML
     void openHandler(Profile profile, String accType){
         try{
-            Integer.parseInt(amount.getText());
+            Double.parseDouble(amount.getText());
         } catch (NumberFormatException n){
             console.setText(console.getText() + "\n" + "Invalid Command!");
             return;
         }
-        int amountDepo = Integer.parseInt(amount.getText());
+        double amountDepo = Double.parseDouble(amount.getText());
         if (accType.equals("Savings")) {
             boolean isLoy = isLoyal.isSelected();
             console.setText(console.getText() + "\n" + accountDatabase.validOpen(new Savings(profile, amountDepo, isLoy)));
@@ -396,12 +395,12 @@ public class TransactionManagerController {
         Profile profile = new Profile(dwFname.getText().trim(),dwLname.getText().trim(),  new Date(String.valueOf(dwDOB.getValue())));
         String accType = (String) dwAccountType.getValue();
         try{
-            Integer.parseInt(dwAmount.getText());
+            Double.parseDouble(dwAmount.getText());
         } catch(NumberFormatException n){
             console.setText(console.getText() + "\n" + "Invalid Command!");
             return;
         }
-        int amountDepoWith = Integer.parseInt(dwAmount.getText());
+        double amountDepoWith = Double.parseDouble(dwAmount.getText());
         Account account = null;
         if (depo_with.getSelectedToggle().equals(depositButton)) {
             if (accType.equals("Savings")) {
