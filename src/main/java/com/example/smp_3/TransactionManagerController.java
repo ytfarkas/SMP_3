@@ -23,7 +23,13 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.StringTokenizer;
 
-
+/**
+ * TransactionManagerContoller is our controller class for the GUI
+ * This file declares all of our FXML containers, objects, and fields needed to create the GUI
+ * It included ActionEvent classes that control the events run when triggered
+ *
+ * @author Yehuda Farkas, David Rahabi
+ */
 public class TransactionManagerController {
 
     ObservableList<String> accountTypeList = FXCollections.observableArrayList(
@@ -102,6 +108,9 @@ public class TransactionManagerController {
     private TextArea console;
 
 
+    /**
+     * The Initialize class initializes all the GUI functions on program launch
+     */
     @FXML
     private void initialize() {
         accountType.setItems(accountTypeList);
@@ -126,6 +135,10 @@ public class TransactionManagerController {
         addToggleButtonListeners();
         console.setText("Transaction Manager running...");
     }
+
+    /**
+     * addToggleButtonListeners adds listeners to the toggle buttons, allowing the program to determine which buttons were switched
+     */
     @FXML
     void addToggleButtonListeners(){
         openButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -154,6 +167,10 @@ public class TransactionManagerController {
         });
     }
 
+
+    /**
+     * addTextFieldListeners adds listeners to the text field
+     */
     @FXML
     void addTextFieldListeners(){
         firstName.textProperty().addListener((observable, oldValue, newValue) -> checkOCTextFieldCompletion());
@@ -171,6 +188,10 @@ public class TransactionManagerController {
     }
 
 
+    /**
+     * checkOCTextFieldCompletion Checks if all the text fields are completed in Open and Close
+     * if fields are completed, set confirm disabled to false
+     */
     @FXML
     void checkOCTextFieldCompletion() {
         boolean isComplete = false;
@@ -205,6 +226,10 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * Check if the Deposit and withdraw fields are completed
+     * if so, allow the set disable confirm button to false.
+     */
     @FXML
     void checkDWTextFieldCompletion(){
         boolean isComplete = false;
@@ -221,6 +246,10 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * This function determined with toggle button is selected (Open or close)
+     * @param event event
+     */
     @FXML
     void openCloseToggleButton(ActionEvent event) {
         if (event.getSource() == openButton) {
@@ -249,6 +278,11 @@ public class TransactionManagerController {
             amount.setDisable(true);
         }
     }
+
+    /**
+     * This function checks which account is selected
+     * @param event event
+     */
     @FXML
     void checkAccount(ActionEvent event) {
         if (accountType.getSelectionModel().getSelectedItem() != null) {
@@ -274,6 +308,10 @@ public class TransactionManagerController {
         }
     }
 
+
+    /**
+     * This function clears all fields in the open section
+     */
     @FXML
     void clearOpen() {
         firstName.clear();
@@ -284,6 +322,10 @@ public class TransactionManagerController {
         campusLocation.selectToggle(null);
         amount.clear();
     }
+
+    /**
+     * This function clears all fields in the close section
+     */
     @FXML
     void clearClose() {
         firstName.clear();
@@ -293,6 +335,9 @@ public class TransactionManagerController {
 
     }
 
+    /**
+     * This function clears all fields in the deposit/withdraw section
+     */
     @FXML
     void clearDW() {
         dwFname.clear();
@@ -302,6 +347,11 @@ public class TransactionManagerController {
         dwAmount.clear();
     }
 
+
+    /**
+     * This function clears all fields in open/close
+     * @param event event
+     */
     @FXML
     void clearField(ActionEvent event) { //accountType.setprompt needs to be fixed
         firstName.clear();
@@ -314,7 +364,10 @@ public class TransactionManagerController {
     }
 
 
-    //fix Exceptions
+    /**
+     * This field activates when the confirm button is pressed in open/close
+     * @param event event
+     */
     @FXML
     void confirmField(ActionEvent event) {
             Profile profile = new Profile(firstName.getText().trim(), lastName.getText().trim(), new Date(String.valueOf(dateOfBirth.getValue())));
@@ -326,6 +379,12 @@ public class TransactionManagerController {
                 closeHandler(profile, accType);
             }
     }
+
+    /**
+     * This function creates new accounts according to the inputs
+     * @param profile profile
+     * @param accType accType
+     */
     @FXML
     void openHandler(Profile profile, String accType){
         try{
@@ -359,6 +418,11 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * This function handles all close functions of all accounts
+     * @param profile profile
+     * @param accType account Type
+     */
     @FXML
     void closeHandler(Profile profile, String accType){
         Account account;
@@ -397,6 +461,10 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * This function prints all errors durring the close functions
+     * @param account account
+     */
     @FXML
     void printCloseErrors(Account account){
         if(account.holder.getDOB().checkLeap() != null){
@@ -410,6 +478,11 @@ public class TransactionManagerController {
         }
     }
 
+
+    /**
+     * This function determined with toggle button is selected (Deposit or withdraw)
+     * @param event event
+     */
     @FXML
     void depoWithToggle(ActionEvent event) {
         if (event.getSource() == depositButton) {
@@ -437,6 +510,11 @@ public class TransactionManagerController {
         }
     }
 
+
+    /**
+     * This function clears all fields in deposit withdraw
+     * @param event event
+     */
     @FXML
     void dwclearField(ActionEvent event) { //accountType.setprompt needs to be fixed
         dwFname.clear();
@@ -446,6 +524,11 @@ public class TransactionManagerController {
         dwAmount.clear();
     }
 
+
+    /**
+     * This field activates when the confirm button is pressed in Deposit/Withdraw
+     * @param event event
+     */
     @FXML
     void dwConfirm(ActionEvent event) {
         Profile profile = new Profile(dwFname.getText().trim(),dwLname.getText().trim(),  new Date(String.valueOf(dwDOB.getValue())));
@@ -489,6 +572,11 @@ public class TransactionManagerController {
         }
     }
 
+
+    /**
+     * This function handle all account errors
+     * @param account account
+     */
     @FXML
     void depositHandler(Account account){
         if (account.balance <= 0) {
@@ -508,6 +596,12 @@ public class TransactionManagerController {
             }
         }
     }
+
+
+    /**
+     * This function prints all withdraw errors
+     * @param account Account
+     */
     @FXML
     void printWithdrawErrors(Account account){
         if(account.balance <= 0) {
@@ -527,20 +621,39 @@ public class TransactionManagerController {
         }
     }
 
+    /**
+     * This function prints all accounts
+     * @param event event
+     */
     @FXML
     void printAccount(ActionEvent event) {
         console.setText(console.getText() + "\n" + accountDatabase.printSorted());
 
     }
+
+    /**
+     * this function prints all interest and fees
+     * @param event event
+     */
     @FXML
     void printInterestAndFees(ActionEvent event) {
         console.setText(console.getText() + "\n" + accountDatabase.printFeesAndInterests());
 
     }
+
+    /**
+     * This function prints all updated balances
+     * @param event event
+     */
     @FXML
     void printUpdatedBalances(ActionEvent event) {
         console.setText(console.getText() + "\n" +accountDatabase.printUpdatedBalances());
     }
+
+    /**
+     * This function loads the file and processes all commands on the file
+     * @param event events
+     */
     @FXML
     void loadFile(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
