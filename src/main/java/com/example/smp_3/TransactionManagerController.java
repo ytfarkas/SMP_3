@@ -123,7 +123,35 @@ public class TransactionManagerController {
         dwAccountType.setDisable(true);
         dwAmount.setDisable(true);
         addTextFieldListeners();
+        addToggleButtonListeners();
         console.setText("Transaction Manager running...");
+    }
+    @FXML
+    void addToggleButtonListeners(){
+        openButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                confirm.setDisable(true);
+                clearOpen();
+            }
+        });
+        closeButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                confirm.setDisable(true);
+                clearClose();
+            }
+        });
+        depositButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                confirm.setDisable(true);
+                clearDW();
+            }
+        });
+        withdrawButton.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) {
+                confirm.setDisable(true);
+                clearDW();
+            }
+        });
     }
 
     @FXML
@@ -247,6 +275,34 @@ public class TransactionManagerController {
     }
 
     @FXML
+    void clearOpen() {
+        firstName.clear();
+        lastName.clear();
+        dateOfBirth.setValue(null);
+        accountType.getSelectionModel().clearSelection();
+        isLoyal.setSelected(false);
+        campusLocation.selectToggle(null);
+        amount.clear();
+    }
+    @FXML
+    void clearClose() {
+        firstName.clear();
+        lastName.clear();
+        dateOfBirth.setValue(null);
+        accountType.getSelectionModel().clearSelection();
+
+    }
+
+    @FXML
+    void clearDW() {
+        dwFname.clear();
+        dwLname.clear();
+        dwDOB.setValue(null);
+        dwAccountType.getSelectionModel().clearSelection();
+        dwAmount.clear();
+    }
+
+    @FXML
     void clearField(ActionEvent event) { //accountType.setprompt needs to be fixed
         firstName.clear();
         lastName.clear();
@@ -275,7 +331,7 @@ public class TransactionManagerController {
         try{
             Double.parseDouble(amount.getText());
         } catch (NumberFormatException n){
-            console.setText(console.getText() + "\n" + "Invalid Command!");
+            console.setText(console.getText() + "\n" + "Not a valid amount.");
             return;
         }
         double amountDepo = Double.parseDouble(amount.getText());
@@ -397,7 +453,7 @@ public class TransactionManagerController {
         try{
             Double.parseDouble(dwAmount.getText());
         } catch(NumberFormatException n){
-            console.setText(console.getText() + "\n" + "Invalid Command!");
+            console.setText(console.getText() + "\n" + "Not a valid amount.");
             return;
         }
         double amountDepoWith = Double.parseDouble(dwAmount.getText());
